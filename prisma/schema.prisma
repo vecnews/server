@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Stream {
+  id         Int       @id @default(autoincrement())
+  stream_url String    @unique
+  title      String?
+  icon       String?
+  start_time DateTime  @default(now())
+  captions   Caption[]
+}
+
+model Caption {
+  id         Int      @id @default(autoincrement())
+  text       String
+  created_at DateTime @default(now())
+
+  stream_id  Int
+  stream Stream @relation(fields: [stream_id], references: [id])
+}
