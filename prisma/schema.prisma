@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Stream {
-  id         Int       @id @default(autoincrement())
+  id         String    @id @default(cuid())
   stream_url String    @unique
   title      String?
   icon       String?
@@ -17,10 +17,16 @@ model Stream {
 }
 
 model Caption {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(cuid())
   text       String
   created_at DateTime @default(now())
 
-  stream_id  Int
-  stream Stream @relation(fields: [stream_id], references: [id])
+  stream_id String
+  stream    Stream @relation(fields: [stream_id], references: [id])
+}
+
+model Trigger {
+  id         String   @id @default(cuid())
+  context    String
+  created_at DateTime @default(now())
 }

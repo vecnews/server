@@ -1,16 +1,17 @@
 import { Hono } from 'hono'
-import { PrismaClient } from '@prisma/client'
-
+import { cors } from 'hono/cors'
 import { config } from 'dotenv'
-config()
+import { streams, captions, triggers } from './src/routes'
 
-const prisma = new PrismaClient()
+config()
 
 const app = new Hono()
 
-app.get('/', (c) => {
-  return c.text('test')
-})
+app.use('/*', cors())
+
+app.route('/streams', streams)
+app.route('/captions', captions)
+app.route('/triggers', triggers)
 
 export default {
   port: 3000,
