@@ -3,13 +3,21 @@ import prisma from '../services/prisma'
 
 const streams = new Hono()
 
+streams.post('/reset-tracking', async (c) => {
+  await prisma.stream.updateMany({
+    data: {
+      tracking: false
+    }
+  })
+  return c.json({ success: true })
+})
+
 streams.post('/', async (c) => {
   const { url, title } = await c.req.json()
-  const stream = await prisma.stream.create({
-    data: {
-      url,
-      title
-    }
+  const stream = await prisma.stream.upsert({
+    where: { url },
+    update: { tracking: true },
+    create: { url, title, tracking: true }
   })
   return c.json(stream)
 })
@@ -48,32 +56,46 @@ streams.delete('/:id', async (c) => {
 })
 
 // Captions routes
-streams.post('/captions/:streamId', async (c) => {
-  const streamId = c.req.param('streamId')
+streams.post('/captions/:streamUrl', async (c) => {
+  const streamUrl = decodeURIComponent(c.req.param('streamUrl'))
   const { text } = await c.req.json()
   try {
     const caption = await prisma.caption.create({
       data: {
         text,
-        streamId
+        stream: {
+          connect: {
+            url: streamUrl
+          }
+        }
+      },
+      include: {
+        stream: true
       }
     })
     return c.json(caption)
   } catch (error) {
-    return c.json({ error: 'Invalid stream ID' }, 400)
+    return c.json({ error: 'Invalid stream URL or stream not found' }, 400)
   }
 })
 
-streams.get('/captions/:streamId', async (c) => {
-  const streamId = c.req.param('streamId')
+streams.get('/captions/:streamUrl', async (c) => {
+  const streamUrl = decodeURIComponent(c.req.param('streamUrl'))
   try {
     const captions = await prisma.caption.findMany({
-      where: { streamId },
-      orderBy: { createdAt: 'desc' }
+      where: {
+        stream: {
+          url: streamUrl
+        }
+      },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        stream: true
+      }
     })
     return c.json(captions)
   } catch (error) {
-    return c.json({ error: 'Invalid stream ID' }, 400)
+    return c.json({ error: 'Invalid stream URL' }, 400)
   }
 })
 

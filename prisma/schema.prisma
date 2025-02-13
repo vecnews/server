@@ -12,6 +12,7 @@ model Stream {
   url       String    @unique
   title     String?
   startTime DateTime  @default(now())
+  tracking  Boolean   @default(true)
   captions  Caption[]
 }
 
