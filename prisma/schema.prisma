@@ -8,21 +8,19 @@ datasource db {
 }
 
 model Stream {
-  id         String    @id @default(cuid())
-  stream_url String    @unique
-  title      String?
-  icon       String?
-  start_time DateTime  @default(now())
-  captions   Caption[]
+  id        String    @id @default(cuid())
+  streamUrl String    @unique
+  startTime DateTime  @default(now())
+  captions  Caption[]
 }
 
 model Caption {
-  id         String   @id @default(cuid())
-  text       String
-  created_at DateTime @default(now())
+  id        String   @id @default(cuid())
+  text      String
+  createdAt DateTime @default(now())
 
-  stream_id String
-  stream    Stream @relation(fields: [stream_id], references: [id])
+  streamId String
+  stream   Stream @relation(fields: [streamId], references: [id])
 }
 
 model Story {
