@@ -1,5 +1,5 @@
 import streams from './streams'
 import captions from './captions'
-import triggers from './triggers'
+import stories from './stories'
 
-export { streams, captions, triggers } 
+export { streams, captions, stories } 

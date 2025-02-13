@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { config } from 'dotenv'
-import { streams, captions, triggers } from './src/routes'
+import { streams, captions, stories } from './src/routes'
 
 config()
 
@@ -11,7 +11,7 @@ app.use('/*', cors())
 
 app.route('/streams', streams)
 app.route('/captions', captions)
-app.route('/triggers', triggers)
+app.route('/stories', stories)
 
 export default {
   port: 3000,

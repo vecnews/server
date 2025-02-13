@@ -25,8 +25,34 @@ model Caption {
   stream    Stream @relation(fields: [stream_id], references: [id])
 }
 
-model Trigger {
-  id         String   @id @default(cuid())
-  context    String
-  created_at DateTime @default(now())
+model Story {
+  id           String        @id @default(cuid())
+  headline     String
+  createdAt    DateTime      @default(now())
+  developments Development[]
+}
+
+model Development {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  text      String
+  blurb     Boolean  @default(false)
+  story     Story    @relation(fields: [storyId], references: [id])
+  storyId   String
+  image     Image[]
+}
+
+model Image {
+  id          String  @id @default(cuid())
+  url         String
+  description String?
+
+  development   Development? @relation(fields: [developmentId], references: [id])
+  developmentId String?
+}
+
+model Source {
+  id   String  @id @default(cuid())
+  url  String?
+  text String?
 }
