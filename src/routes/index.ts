@@ -1,5 +1,2 @@
-import streams from './streams'
-import captions from './captions'
-import stories from './stories'
-
-export { streams, captions, stories } 
+export { default as streams } from './streams'
+export { default as stories } from './stories' 
