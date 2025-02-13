@@ -9,7 +9,8 @@ datasource db {
 
 model Stream {
   id        String    @id @default(cuid())
-  streamUrl String    @unique
+  url       String    @unique
+  title     String?
   startTime DateTime  @default(now())
   captions  Caption[]
 }

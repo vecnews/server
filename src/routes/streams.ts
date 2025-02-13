@@ -4,9 +4,12 @@ import prisma from '../services/prisma'
 const streams = new Hono()
 
 streams.post('/', async (c) => {
-  const { streamUrl } = await c.req.json()
+  const { url, title } = await c.req.json()
   const stream = await prisma.stream.create({
-    data: { streamUrl }
+    data: {
+      url,
+      title
+    }
   })
   return c.json(stream)
 })
