@@ -56,3 +56,17 @@ model Source {
   url  String?
   text String?
 }
+
+model GoogleTrend {
+  query              String
+  startTimestamp     DateTime  @default(now())
+  endTimestamp       DateTime?
+  updatedAt          DateTime  @updatedAt
+  active             Boolean
+  searchVolume       Int
+  increasePercentage Int
+  categories         String[]
+  trendBreakdown     String[]
+
+  @@id([query, startTimestamp])
+}
