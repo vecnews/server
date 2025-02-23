@@ -41,12 +41,7 @@ model Development {
   story     Story    @relation(fields: [storyId], references: [id])
   storyId   String
   image     String[]
-}
-
-model Source {
-  id   String  @id @default(cuid())
-  url  String?
-  text String?
+  sources   String[]
 }
 
 model GoogleTrend {
