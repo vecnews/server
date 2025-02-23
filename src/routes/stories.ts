@@ -1,5 +1,15 @@
 import { Hono } from 'hono'
 import prisma from '../services/prisma'
+import { embed } from 'ai'
+import { openai } from "@ai-sdk/openai";
+
+import { Pinecone } from "@pinecone-database/pinecone";
+
+const pc = new Pinecone({
+  apiKey: process.env.PINECONE_API_KEY || ''
+});
+
+const vectorStore = pc.index('news').namespace('news');
 
 const stories = new Hono()
 
@@ -51,6 +61,21 @@ stories.post('/:id/developments', async (c) => {
           image: images.map((img: { url: string; description?: string }) => img.url)
         }
       })
+
+
+      const embeddings = await embed({
+        model: openai.embedding('text-embedding-3-small'),
+        value: text
+      })
+
+      await vectorStore.upsert([{
+        id: development.id,
+        values: embeddings.embedding,
+        metadata: {
+          storyId
+        }
+      }])
+
 
       if (sources.length > 0) {
         await tx.source.createMany({
