@@ -14,11 +14,7 @@ stories.post('/', async (c) => {
 stories.get('/', async (c) => {
   const stories = await prisma.story.findMany({
     include: {
-      developments: {
-        include: {
-          image: true
-        }
-      }
+      developments: true
     },
     orderBy: { createdAt: 'desc' }
   })
@@ -31,11 +27,7 @@ stories.get('/:id', async (c) => {
     const story = await prisma.story.findUnique({
       where: { id },
       include: {
-        developments: {
-          include: {
-            image: true
-          }
-        }
+        developments: true
       }
     })
     if (!story) return c.json({ error: 'Story not found' }, 404)
@@ -56,15 +48,7 @@ stories.post('/:id/developments', async (c) => {
           text,
           blurb,
           storyId,
-          image: {
-            create: images.map((img: { url: string; description?: string }) => ({
-              url: img.url,
-              description: img.description
-            }))
-          }
-        },
-        include: {
-          image: true
+          image: images.map((img: { url: string; description?: string }) => img.url)
         }
       })
 
@@ -91,9 +75,6 @@ stories.get('/:id/developments', async (c) => {
   try {
     const developments = await prisma.development.findMany({
       where: { storyId },
-      include: {
-        image: true
-      },
       orderBy: { createdAt: 'desc' }
     })
     return c.json(developments)

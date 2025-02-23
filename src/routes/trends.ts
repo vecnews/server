@@ -39,7 +39,7 @@ trends.post('/', async (c) => {
       categories: categories.map(cat => typeof cat === 'string' ? cat : cat.name),
       trendBreakdown: trendBreakdown || [],
       increasePercentage,
-      active: true,
+      active,
       startTimestamp,
       endTimestamp
     }

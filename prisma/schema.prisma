@@ -29,6 +29,7 @@ model Story {
   id           String        @id @default(cuid())
   headline     String
   createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
   developments Development[]
 }
 
@@ -39,16 +40,7 @@ model Development {
   blurb     Boolean  @default(false)
   story     Story    @relation(fields: [storyId], references: [id])
   storyId   String
-  image     Image[]
-}
-
-model Image {
-  id          String  @id @default(cuid())
-  url         String
-  description String?
-
-  development   Development? @relation(fields: [developmentId], references: [id])
-  developmentId String?
+  image     String[]
 }
 
 model Source {

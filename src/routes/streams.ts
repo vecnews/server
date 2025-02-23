@@ -75,6 +75,7 @@ streams.post('/captions/:streamUrl', async (c) => {
     })
     return c.json(caption)
   } catch (error) {
+    console.error(error)
     return c.json({ error: 'Invalid stream URL or stream not found' }, 400)
   }
 })
