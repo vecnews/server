@@ -20,9 +20,8 @@ model Caption {
   id        String   @id @default(cuid())
   text      String
   createdAt DateTime @default(now())
-
-  streamId String
-  stream   Stream @relation(fields: [streamId], references: [id])
+  streamId  String
+  stream    Stream   @relation(fields: [streamId], references: [id])
 }
 
 model Story {
@@ -38,10 +37,18 @@ model Development {
   createdAt DateTime @default(now())
   text      String
   blurb     Boolean  @default(false)
+  images    String[]
+  sources   Source[]
   story     Story    @relation(fields: [storyId], references: [id])
   storyId   String
-  image     String[]
-  sources   String[]
+}
+
+model Source {
+  id            String       @id @default(cuid())
+  url           String
+  score         Int?
+  development   Development? @relation(fields: [developmentId], references: [id])
+  developmentId String?
 }
 
 model GoogleTrend {
